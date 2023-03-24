@@ -1,54 +1,20 @@
 import { useEffect, useState } from "react";
 import { useAppointmentsApi } from "./useAppointmentsApi";
 import styles from "./App.module.css";
-import * as yup from "yup";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-
-type ExistingAppointments = {
-  name: string;
-  startTime: number;
-  endTime: number;
-};
-
-const schema = yup.object().shape({
-  name: yup.string().required(),
-  startTime: yup.string().required(),
-  endTime: yup.string().required(),
-});
-
-const convertDateToTimestamp = (date: Date) => {
-  return new Date(date).getTime();
-};
-
-const convertTimestampToString = (timestamp: number): string => {
-  const date = new Date(timestamp);
-  const options: Intl.DateTimeFormatOptions = {
-    weekday: "short",
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-  };
-  const formattedDate = date.toLocaleString("en-US", options);
-  return formattedDate;
-};
+import Form from "./components/form";
+import {
+  convertDateToTimestamp,
+  convertTimestampToString,
+} from "./utils/timestamp-converters";
+import { ExistingAppointments } from "./App.types";
 
 function App() {
   const API = useAppointmentsApi();
-  const { register, watch, handleSubmit } = useForm({
-    resolver: yupResolver(schema),
-  });
 
   const [existingAppointments, setExistingAppointments] = useState<
     ExistingAppointments[]
   >([]);
   const [errorText, setErrorText] = useState<string | null>(null);
-
-  const canUserSubmitForm = Boolean(
-    watch("name") && watch("startTime") && watch("endTime")
-  );
 
   const onSubmit = async (formData: Record<string, any>) => {
     setErrorText(null);
@@ -56,8 +22,8 @@ function App() {
     // check if appointment already exists. If so, show an error message and return.
     const appointmentConflict = existingAppointments.find(
       (appointment) =>
-        convertDateToTimestamp(formData.startTime) >= appointment.startTime ||
-        convertDateToTimestamp(formData.endTime) <= appointment.endTime
+        convertDateToTimestamp(formData.startTime) === appointment.startTime ||
+        convertDateToTimestamp(formData.endTime) === appointment.endTime
     );
     if (appointmentConflict) {
       setErrorText(
@@ -95,44 +61,8 @@ function App() {
             <p>{errorText}</p>
           </div>
         )}
-        <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-          <h2 className={styles.formTitle}>Create an appointment</h2>
-          <label className={styles.label}>
-            <span className={styles.labelText}>Your name</span>
-            <input
-              className={styles.input}
-              type="text"
-              placeholder="John Smith"
-              {...register("name")}
-              required
-            />
-          </label>
-          <label className={styles.label}>
-            <span className={styles.labelText}>Start Time</span>
-            <input
-              className={styles.input}
-              type="datetime-local"
-              {...register("startTime")}
-              required
-            />
-          </label>
-          <label className={styles.label}>
-            <span className={styles.labelText}>End Time</span>
-            <input
-              className={styles.input}
-              type="datetime-local"
-              {...register("endTime")}
-              required
-            />
-          </label>
-          <button
-            type="submit"
-            className={styles.button}
-            disabled={!canUserSubmitForm}
-          >
-            Submit Request
-          </button>
-        </form>
+        <Form onSubmit={onSubmit} />
+
         <section className={styles.appointmentsContainer}>
           <h2 className={styles.appointmentsTitle}>Existing Appointments</h2>
           <ul className={styles.appointments}>
