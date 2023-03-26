@@ -13,6 +13,9 @@ Welcome! In this project, we've created a form for a potential customer to creat
 5. We're currently just showing a hard-coded existing appointment in the interface. Oops! Please fetch the current list of appointments from the API client when the page first renders.
     - Added call to get and display existing appointments
 
+
+Video link: https://www.loom.com/share/5ec19ef15a20400496b6a4c4981a382b
+
 This assignment is meant to assess whether you would be a good fit for working with our team. As such, we recommend approaching as if you were already on our team. Did we miss something in the product spec? Are we forgetting an edge-case? Feel free to write up anything you think we're forgetting and send it along with your completed project.
 
 We expect this assignment to not take more than two hours. When you are finished coding please record a brief ~2-3 minute screen recording discussing your code changes at a high level. Include the video in a zip file with your code. We recommend using loom for the recording. Please use git and make occasional commits as you work (the git directory should be included in the zip). Feel free to Google things as needed, but for this assignment we ask that you don't use AI to write entire code blocks for you (Not the time to try out GTP-4).
@@ -41,3 +44,4 @@ See the section about [running tests](https://facebook.github.io/create-react-ap
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn more about React, check out the [React documentation](https://reactjs.org/).
+
